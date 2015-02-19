@@ -64,6 +64,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Alien.h" />
+    <ClInclude Include="Card.h" />
+    <ClInclude Include="Deck.h" />
+    <ClInclude Include="DestinyCard.h" />
+    <ClInclude Include="DestinyDeck.h" />
+    <ClInclude Include="GameobjectContainers.h" />
+    <ClInclude Include="GameplayEnum.h" />
+    <ClInclude Include="HyperspaceGate.h" />
+    <ClInclude Include="Planet.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Ship.h" />
+    <ClInclude Include="Warp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Alien.cpp" />
+    <ClCompile Include="Card.cpp" />
+    <ClCompile Include="Deck.cpp" />
+    <ClCompile Include="DestinyCard.cpp" />
+    <ClCompile Include="DestinyDeck.cpp" />
+    <ClCompile Include="HyperspaceGate.cpp" />
+    <ClCompile Include="Planet.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Ship.cpp" />
+    <ClCompile Include="Warp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
