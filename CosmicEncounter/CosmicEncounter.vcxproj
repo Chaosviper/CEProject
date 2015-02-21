@@ -69,6 +69,7 @@
     <ClInclude Include="Deck.h" />
     <ClInclude Include="DestinyCard.h" />
     <ClInclude Include="DestinyDeck.h" />
+    <ClInclude Include="EventHandler.h" />
     <ClInclude Include="GameobjectContainers.h" />
     <ClInclude Include="GameplayEnum.h" />
     <ClInclude Include="HyperspaceGate.h" />
@@ -83,6 +84,8 @@
     <ClCompile Include="Deck.cpp" />
     <ClCompile Include="DestinyCard.cpp" />
     <ClCompile Include="DestinyDeck.cpp" />
+    <ClCompile Include="DummyMain.cpp" />
+    <ClCompile Include="EventHandler.cpp" />
     <ClCompile Include="HyperspaceGate.cpp" />
     <ClCompile Include="Planet.cpp" />
     <ClCompile Include="Player.cpp" />
