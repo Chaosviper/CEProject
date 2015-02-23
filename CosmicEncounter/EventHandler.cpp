@@ -1,6 +1,7 @@
 #include "EventHandler.h"
 #include <iostream>
 #include <string>
+#include <queue>
 
 namespace UIHandler{
 
@@ -12,15 +13,61 @@ namespace UIHandler{
 		}
 	}
 
-	EventHandler::EventHandler()
+	EventHandler::EventHandler() : isStopped(false)
 	{
 		std::cout << "COSTRUCT!" << std::endl;
-		isStopped = false;
+
+		rc = new RefCounter();
+		eventsQueue = new std::queue<__int16>();
 	}
 
+	EventHandler::EventHandler(const EventHandler& toCopy){
+		std::cout << "COPYED!" << std::endl;
+		
+		// Incrementing refCounter
+		toCopy.rc->addRef(); //NOTA: perche' mi consente di modificare se non e' const "addRef()"???
+
+		// Shallow copy of the queue because when creating a new thread, the thread copy by value!
+		eventsQueue = toCopy.eventsQueue;
+
+		isStopped = false;
+		rc = toCopy.rc;
+	}
+
+	EventHandler& EventHandler::operator=(const EventHandler& toAssign){
+
+		// Check if isn't it self
+		if (this != &toAssign){
+			std::cout << "ASSIGNED" << std::endl;
+
+			// Decrese old refCounter and check if is the last instance of the class that will be overritten, in order to relese the object!
+			if (rc->releaseRef() <= 0){
+				delete eventsQueue;
+				delete rc;
+			}
+
+			// Incrementing new refCounter
+			toAssign.rc->addRef(); //NOTA: perche' mi consente di modificare se non e' const "addRef()"???
+
+			// Shallow copy of the queue because when creating a new thread, the thread copy by value!
+			eventsQueue = toAssign.eventsQueue;
+
+			isStopped = toAssign.isStopped;
+			rc = toAssign.rc;
+		}
+
+		return *(this);
+	}
 
 	EventHandler::~EventHandler()
 	{
+		std::cout << "DESTROYED" << std::endl;
+
+		// Decrese refCounter and check if is the last instance of the class in order to relese the object!
+		if (rc->releaseRef() <= 0){
+			delete eventsQueue;
+			delete rc;
+		}
 	}
 
 	void EventHandler::StopReading(){
@@ -37,7 +84,6 @@ namespace UIHandler{
 
 		__int16 inputBitMaskResult = 0;
 
-		std::cout << std::cin.peek();
 		if (actualInputDetected == 'P' && std::cin.peek() != '\n'){
 			std::cin >> actualInputDetected;
 
@@ -51,11 +97,10 @@ namespace UIHandler{
 
 					// Alien power activated
 					if (actualInputDetected == 'X'){
-						//TODO: Bit mask for alien power
 						inputBitMaskResult = 1 << 15; // bit of alien power activated
 						inputBitMaskResult = inputBitMaskResult | (playerWhoPlayed << 12); // bits of player who played
 
-						eventsQueue.push_back(inputBitMaskResult);
+						eventsQueue->push(inputBitMaskResult);
 
 						toReturn = true;
 					}
@@ -69,7 +114,7 @@ namespace UIHandler{
 						}
 						// ** END
 						tempNum += actualInputDetected;
-
+						
 						while (std::cin.peek() != '\n'){
 							std::cin >> actualInputDetected;
 
@@ -87,11 +132,10 @@ namespace UIHandler{
 						cardPlayed = std::stoi(tempNum);
 						
 						if (cardPlayed >= 0 && cardPlayed < 0xfff){
-							//TODO: Bit mask for card played
 							inputBitMaskResult = playerWhoPlayed << 12; // bits of player who played
 							inputBitMaskResult = inputBitMaskResult | cardPlayed;
 
-							eventsQueue.push_back(inputBitMaskResult);
+							eventsQueue->push(inputBitMaskResult);
 
 							toReturn = true;
 						}
@@ -103,4 +147,16 @@ namespace UIHandler{
 		return toReturn;
 	}
 
+	__int16 EventHandler::getNextEvent(){
+		__int16 toReturn = 0;
+
+		// Consuming the event
+		if (!eventsQueue->empty()){
+			toReturn = eventsQueue->front();
+			eventsQueue->pop();
+		}
+
+		return toReturn;
+	}
 }
+
