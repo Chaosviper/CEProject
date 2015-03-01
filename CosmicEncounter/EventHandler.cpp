@@ -7,13 +7,13 @@ namespace UIHandler{
 
 	void EventHandler::operator()(){
 		char actualInputDetected;
-		while (!isStopped){
+		while (true){
 			std::cin >> actualInputDetected;
 			InterpretInput(actualInputDetected);
 		}
 	}
 
-	EventHandler::EventHandler() : isStopped(false)
+	EventHandler::EventHandler()
 	{
 		std::cout << "COSTRUCT!" << std::endl;
 
@@ -30,7 +30,6 @@ namespace UIHandler{
 		// Shallow copy of the queue because when creating a new thread, the thread copy by value!
 		eventsQueue = toCopy.eventsQueue;
 
-		isStopped = false;
 		rc = toCopy.rc;
 	}
 
@@ -52,7 +51,6 @@ namespace UIHandler{
 			// Shallow copy of the queue because when creating a new thread, the thread copy by value!
 			eventsQueue = toAssign.eventsQueue;
 
-			isStopped = toAssign.isStopped;
 			rc = toAssign.rc;
 		}
 
@@ -68,10 +66,6 @@ namespace UIHandler{
 			delete eventsQueue;
 			delete rc;
 		}
-	}
-
-	void EventHandler::StopReading(){
-		isStopped = true;
 	}
 
 	bool EventHandler::InterpretInput(char actualInputDetected){

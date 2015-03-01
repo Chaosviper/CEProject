@@ -25,6 +25,7 @@ class Player
 
 public:
 	Player();
+	//TODO: implementare cpctr!!
 	~Player();
 };
 

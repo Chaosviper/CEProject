@@ -13,6 +13,8 @@ enum AlienDifficulty{
 	Hard
 };
 
+typedef void(*AlienPowerFunc)();
+
 class Alien
 {
 	int phaseAllowed;
@@ -21,7 +23,8 @@ class Alien
 	std::string name;
 	AlienDifficulty difficulty;
 	GameplayEnum::GameboxSet originSet;
-	// TODO: add pointer to function
+	AlienPowerFunc activatePower;
+
 public:
 	Alien();
 	~Alien();

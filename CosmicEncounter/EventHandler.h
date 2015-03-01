@@ -20,7 +20,6 @@ namespace UIHandler{
 		};
 
 
-		bool isStopped;
 		/* Any int16 contains information about: 
 			1 bit most significant = played or not alien power, 
 			next 3 bit = playerWhoPlayed,
@@ -39,7 +38,6 @@ namespace UIHandler{
 
 		// Get the event, if any, and consume it
 		__int16 getNextEvent(); // TODO: Dovra' essere thread safe!!
-		void StopReading();
 
 		EventHandler();
 		EventHandler(const EventHandler& toCopy);
