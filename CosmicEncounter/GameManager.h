@@ -7,17 +7,32 @@ class GameManager
 public:
 	const static int MAX_NUM_PLAYERS = 8;
 
-private:
-	int NumOfPlayer;
-	Player players[MAX_NUM_PLAYERS];
+	inline static GameManager& GetGameManager(){
+		static GameManager singleton;
 
-public:
+		return singleton;
+	}
 
-	GameManager();
 	void AddPlayer(const Player& newPlayer);
+	Player& GetPlayer(int index);
 
 	//TODO: implementare tutte le varie fasi!!!!
 
 	~GameManager();
+
+private:
+	int NumOfPlayer;
+	Player players[MAX_NUM_PLAYERS];
+
+	// Costruttore, ctor e opertore assegnamento private, cosi' da isolare il singleton
+	GameManager() { }
+	GameManager(const GameManager&);
+	GameManager& operator=(const GameManager&);
+
+
+public:
+
+
+
 };
 

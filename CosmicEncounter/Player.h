@@ -25,6 +25,10 @@ class Player
 
 public:
 	Player();
+
+	const Alien& GetAlien() const;
+	const Card* GetCardPlayed(int index) const;
+
 	//TODO: implementare cpctr!!
 	~Player();
 };

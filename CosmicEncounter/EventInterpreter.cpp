@@ -1,5 +1,5 @@
 #include "EventInterpreter.h"
-#include "Player.h"
+#include "GameManager.h"
 
 
 EventInterpreter::EventInterpreter()
@@ -11,11 +11,32 @@ EventInterpreter::EventInterpreter()
 
 EventInfo* EventInterpreter::GetNextEvent(){
 
+	EventInfo* toReturn = nullptr;
+
 	__int16 nextEvent = eventHandler.getNextEvent();
 
-	// TODO: parsa il nextEvent interrogando il GM per creare un EVENTINFO da poi restituire!
+	if (nextEvent != 0){
+		GameManager& GM = GameManager::GetGameManager();
 
-	return new EventInfo(*(new Player())); // <-- TODO: da rimuovere
+		// mask for player: 0111 0000 0000 0000 => mask: 7000
+		int player = (nextEvent & 0x7000) > 12;
+		// mask for alien power 1000 0000 0000 0000. Put the most significant bit in the less significant bit and mask it
+		int activatedAlienPower = (nextEvent > 15) & 0x1;
+		// mask for card played 0000 1111 1111 1111 => mask: fff
+		int cardPlayed = nextEvent & 0xfff;
+
+		Player& whoPlayed = GM.GetPlayer(player);
+
+		toReturn = new EventInfo(whoPlayed);
+		if (activatedAlienPower > 0){
+			toReturn->alienPowerPlayed = &(whoPlayed.GetAlien());
+		}
+		else{
+			toReturn->cardPlayed = whoPlayed.GetCardPlayed(cardPlayed);
+		}
+	}
+
+	return toReturn;
 }
 
 

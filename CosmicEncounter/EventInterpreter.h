@@ -14,6 +14,7 @@ struct EventInfo{
 	const Alien* alienPowerPlayed;
 
 	EventInfo(Player& whoPlayed): playerWhoPlayed(whoPlayed) { }
+	// --> No Distructor because is only a containter, doesn't have the ownership of the resources <--
 };
 
 class EventInterpreter
