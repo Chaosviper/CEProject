@@ -1,9 +1,9 @@
-#include "EventHandler.h"
+#include "GameManager.h"
 #include <thread>
 #include <iostream>
 
 int main(){
-	UIHandler::EventHandler e;
+	/*UIHandler::EventHandler e;
 
 	std::thread t1(e);
 
@@ -13,5 +13,14 @@ int main(){
 		if (i != 0)
 			std::cout << i << std::endl;
 	}
-	return 0;
+	return 0;*/
+
+	GameManager& gm = GameManager::GetGameManager();
+
+	Player a, b;
+	gm.AddPlayer(a);
+	gm.AddPlayer(b);
+	
+	while (1)
+	gm.GameLoop();
 }

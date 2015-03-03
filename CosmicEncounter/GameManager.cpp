@@ -21,19 +21,21 @@ Player& GameManager::GetPlayer(int index){
 void GameManager::GameLoop(){
 
 	// ** Se mi e' stato detto di aspettare e non sono passati 30 sec: controllo eventi
-	if (waiting && (clock() - lastTime) / CLOCKS_PER_SEC > 30){
+	if (waiting && (clock() - lastTime) / CLOCKS_PER_SEC < 30){
 		EventInfo* actualEv = eventInterpreter.GetNextEvent();
+
+		std::cout << "\r" << std::flush << (clock() - lastTime) / CLOCKS_PER_SEC ; // TODO: da rimuovere!! e' di debug!!
 
 		// ** Se si e' verificato un evento..
 		if (actualEv != nullptr){
 			// ** .. Allora se l'evento e' una carta funzione (vedi riga sopra) e non ci sono eventi attivi settalo come evento attuale processandolo..
-			if (actualTempPhase != nullptr && IsInterruptEvent(*actualEv)){
+			if (actualTempPhase == nullptr && IsInterruptEvent(*actualEv)){
 				actualTempPhase = ProcessEvent(*actualEv);
 				// TODO: segno potere/carta come: attivato
 				lastTime = clock(); // <-- Azzero il timer
 			}
 			// ** .. Altrimenti, se l'evento e' gia' presente, l'unica cosa che sto aspettando e' un possibile zap, se arriva (ed e' quello giusto) annullo l'azione segnata
-			else if(IsZapperEvent(*actualEv)){ // TODO: controllare che lo zap sia quello di tipo corretto
+			else if (actualTempPhase != nullptr && IsZapperEvent(*actualEv)){ // TODO: controllare che lo zap sia quello di tipo corretto
 				hasBeenZapped = !hasBeenZapped;
 				// TODO: Segno la carta come giocata
 				lastTime = clock(); // <-- Azzero il timer
@@ -48,36 +50,52 @@ void GameManager::GameLoop(){
 			switch (phase)
 			{
 			case startturn :
-				if (StartTurn())
-					phase = static_cast<Phases>(static_cast<int>(phase) << 1);
+				if (StartTurn()){
+					std::cout << "Starting: Regroup phase" << std::endl;
+					phase = static_cast<Phases>(1);
+				}
 				break;
 			case regroup:
-				if (Regroup())
+				if (Regroup()){
+					std::cout << "Starting: Destiny phase" << std::endl;
 					phase = static_cast<Phases>(static_cast<int>(phase) << 1);
+				}
 				break;
 			case destiny:
-				if (Destiny())
+				if (Destiny()){
+					std::cout << "Starting: Launch phase" << std::endl;
 					phase = static_cast<Phases>(static_cast<int>(phase) << 1);
+				}
 				break;
 			case launch:
-				if (Launch())
+				if (Launch()){
+					std::cout << "Starting: Alliance phase" << std::endl;
 					phase = static_cast<Phases>(static_cast<int>(phase) << 1);
+				}
 				break;
 			case alliance:
-				if (Alliance())
+				if (Alliance()){
+					std::cout << "Starting: Planning phase" << std::endl;
 					phase = static_cast<Phases>(static_cast<int>(phase) << 1);
+				}
 				break;
 			case planning:
-				if (Planning())
+				if (Planning()){
+					std::cout << "Starting: Reveal phase" << std::endl;
 					phase = static_cast<Phases>(static_cast<int>(phase) << 1);
+				}
 				break;
 			case reveal:
-				if (Reveal())
+				if (Reveal()){
+					std::cout << "Starting: Resolution phase" << std::endl;
 					phase = static_cast<Phases>(static_cast<int>(phase) << 1);
+				}
 				break;
 			case resolution:
-				if (Resolution())
+				if (Resolution()){
+					std::cout << "Starting: StartTurn phase" << std::endl;
 					phase = startturn; // TODO: non corretto, da sostituire!!
+				}
 				break;
 			default:
 				break;
@@ -104,34 +122,42 @@ void GameManager::GameLoop(){
 
 bool GameManager::StartTurn(){
 	waiting = true;
+	lastTime = clock();
 	return true;
 }
 bool GameManager::Regroup(){
 	waiting = true;
+	lastTime = clock();
 	return true;
 }
 bool GameManager::Destiny(){
 	waiting = true;
+	lastTime = clock();
 	return true;
 }
 bool GameManager::Launch(){
 	waiting = true;
+	lastTime = clock();
 	return true;
 }
 bool GameManager::Alliance(){
 	waiting = true;
+	lastTime = clock();
 	return true;
 }
 bool GameManager::Planning(){
 	waiting = true;
+	lastTime = clock();
 	return true;
 }
 bool GameManager::Reveal(){
 	waiting = true;
+	lastTime = clock();
 	return true;
 }
 bool GameManager::Resolution(){
 	waiting = true;
+	lastTime = clock();
 	return true;
 }
 
