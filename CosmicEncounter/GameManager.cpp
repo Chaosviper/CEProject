@@ -1,5 +1,4 @@
 #include "GameManager.h"
-#include "EventInterpreter.h"
 
 void GameManager::AddPlayer(const Player& newPlayer){
 	players[NumOfPlayer++] = newPlayer;
@@ -18,60 +17,80 @@ Player& GameManager::GetPlayer(int index){
 
 
 void GameManager::GameLoop(){
-	EventInfo* actualEv = eventInterpreter.GetNextEvent();
 
-	if (actualEv != nullptr){
-		actualTempPhase = ProcessEvent(*actualEv);
-	}
+	// ** Se mi e' stato detto di aspettare e non sono passati 30 sec: controllo eventi
+	if (waiting && (clock() - lastTime) / CLOCKS_PER_SEC > 30){
+		EventInfo* actualEv = eventInterpreter.GetNextEvent();
 
-	// TODO: implementare timer 30 secondi!!
-
-	if (actualTempPhase == nullptr){
-
-		switch (phase)
-		{
-		case startturn :
-			if (StartTurn())
-				phase = static_cast<Phases>(static_cast<int>(phase) + 1);
-			break;
-		case regroup:
-			if (Regroup())
-				phase = static_cast<Phases>(static_cast<int>(phase)+1);
-			break;
-		case destiny:
-			if (Destiny())
-				phase = static_cast<Phases>(static_cast<int>(phase)+1);
-			break;
-		case launch:
-			if (Launch())
-				phase = static_cast<Phases>(static_cast<int>(phase)+1);
-			break;
-		case alliance:
-			if (Alliance())
-				phase = static_cast<Phases>(static_cast<int>(phase)+1);
-			break;
-		case planning:
-			if (Planning())
-				phase = static_cast<Phases>(static_cast<int>(phase)+1);
-			break;
-		case reveal:
-			if (Reveal())
-				phase = static_cast<Phases>(static_cast<int>(phase)+1);
-			break;
-		case resolution:
-			if (Resolution())
-				phase = startturn; // TODO: non corretto, da sostituire!!
-			break;
-		default:
-			break;
+		// ** Se si e' verificato un evento..
+		if (actualEv != nullptr){ // TODO: implementare una funzione che controlla: se e' nullptr o se e' una carta funzione (flare o artifact non zap)
+			// ** .. Allora se l'evento e' una carta funzione (vedi riga sopra) e non ci sono eventi attivi settalo come evento attuale processandolo..
+			if (actualTempPhase != nullptr){
+				actualTempPhase = ProcessEvent(*actualEv);
+				// TODO: segno potere/carta come: attivato
+				lastTime = clock(); // <-- Azzero il timer
+			}
+			// ** .. Altrimenti, se l'evento e' gia' presente, l'unica cosa che sto aspettando e' un possibile zap, se arriva (ed e' quello giusto) annullo l'azione segnata
+			else if(/* TODO: controllo se e' uno zap la carta giocata */ false){
+				hasBeenZapped = !hasBeenZapped;
+				// TODO: Segno la carta come giocata
+				lastTime = clock(); // <-- Azzero il timer
+			}
 		}
-
 	}
 	else{
-		actualTempPhase();
-		// TODO: trovare un modo di settare la funzione actualTempPhase a null!!!
-	}
+		if (actualTempPhase == nullptr){
 
+			switch (phase)
+			{
+			case startturn :
+				if (StartTurn())
+					phase = static_cast<Phases>(static_cast<int>(phase) + 1);
+				break;
+			case regroup:
+				if (Regroup())
+					phase = static_cast<Phases>(static_cast<int>(phase)+1);
+				break;
+			case destiny:
+				if (Destiny())
+					phase = static_cast<Phases>(static_cast<int>(phase)+1);
+				break;
+			case launch:
+				if (Launch())
+					phase = static_cast<Phases>(static_cast<int>(phase)+1);
+				break;
+			case alliance:
+				if (Alliance())
+					phase = static_cast<Phases>(static_cast<int>(phase)+1);
+				break;
+			case planning:
+				if (Planning())
+					phase = static_cast<Phases>(static_cast<int>(phase)+1);
+				break;
+			case reveal:
+				if (Reveal())
+					phase = static_cast<Phases>(static_cast<int>(phase)+1);
+				break;
+			case resolution:
+				if (Resolution())
+					phase = startturn; // TODO: non corretto, da sostituire!!
+				break;
+			default:
+				break;
+			}
+
+		}
+		else{
+			if (!hasBeenZapped){
+				actualTempPhase();
+			}
+
+			//TODO: reset di tutti i parametri degli interrupt
+			waiting = false;
+			actualTempPhase = nullptr;
+			hasBeenZapped = false;
+		}
+	}
 }
 
 //**************************************************************************************************************************
