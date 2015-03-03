@@ -28,6 +28,7 @@ namespace UIHandler{
 			0001 0000 0000 0100 => player 2 played 4th card in his hand!
 		*/
 		std::queue<__int16>* eventsQueue;
+		std::queue<int>* requestedActionQueue;
 		RefCounter* rc;
 
 		bool InterpretInput(char actualInputDetected);
@@ -37,6 +38,7 @@ namespace UIHandler{
 
 		// Get the event, if any, and consume it
 		__int16 getNextEvent(); // TODO: Dovra' essere thread safe!!
+		int getNextRequestedAction();
 
 		EventHandler();
 		EventHandler(const EventHandler& toCopy);

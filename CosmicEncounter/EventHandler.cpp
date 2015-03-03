@@ -19,6 +19,7 @@ namespace UIHandler{
 
 		rc = new RefCounter();
 		eventsQueue = new std::queue<__int16>();
+		requestedActionQueue = new std::queue<int>();
 	}
 
 	EventHandler::EventHandler(const EventHandler& toCopy){
@@ -29,6 +30,7 @@ namespace UIHandler{
 
 		// Shallow copy of the queue because when creating a new thread, the thread copy by value!
 		eventsQueue = toCopy.eventsQueue;
+		requestedActionQueue = toCopy.requestedActionQueue;
 
 		rc = toCopy.rc;
 	}
@@ -42,6 +44,7 @@ namespace UIHandler{
 			// Decrese old refCounter and check if is the last instance of the class that will be overritten, in order to relese the object!
 			if (rc->releaseRef() <= 0){
 				delete eventsQueue;
+				delete requestedActionQueue;
 				delete rc;
 			}
 
@@ -50,6 +53,7 @@ namespace UIHandler{
 
 			// Shallow copy of the queue because when creating a new thread, the thread copy by value!
 			eventsQueue = toAssign.eventsQueue;
+			requestedActionQueue = toAssign.requestedActionQueue;
 
 			rc = toAssign.rc;
 		}
@@ -64,6 +68,7 @@ namespace UIHandler{
 		// Decrese refCounter and check if is the last instance of the class in order to relese the object!
 		if (rc->releaseRef() <= 0){
 			delete eventsQueue;
+			delete requestedActionQueue;
 			delete rc;
 		}
 	}
@@ -78,6 +83,7 @@ namespace UIHandler{
 
 		__int16 inputBitMaskResult = 0;
 
+		// ** If is an event that interrupt the game
 		if (actualInputDetected == 'P' && std::cin.peek() != '\n'){
 			std::cin >> actualInputDetected;
 
@@ -137,6 +143,37 @@ namespace UIHandler{
 				}
 			}
 		}
+		// Else if is an Action for the game
+		else if (actualInputDetected == 'A' && std::cin.peek() != '\n'){
+			std::cin >> actualInputDetected;
+
+			// ** Check if isn't a number exit from the while
+			actualNumber = static_cast<int>(actualInputDetected)-ASII_CODE_0;
+			if (actualNumber < 0 && actualNumber >= 10){
+
+				return toReturn;
+			}
+			// ** END
+			tempNum += actualInputDetected;
+
+			while (std::cin.peek() != '\n'){
+				std::cin >> actualInputDetected;
+
+				// ** Check if isn't a number exit from the while
+				actualNumber = static_cast<int>(actualInputDetected)-ASII_CODE_0;
+				if (actualNumber < 0 && actualNumber >= 10){
+					return toReturn;
+				}
+				// ** END
+
+				tempNum += actualInputDetected;
+
+			};
+
+			int actionSelected = std::stoi(tempNum);
+
+			requestedActionQueue->push(actionSelected);
+		}
 
 		return toReturn;
 	}
@@ -148,6 +185,18 @@ namespace UIHandler{
 		if (!eventsQueue->empty()){
 			toReturn = eventsQueue->front();
 			eventsQueue->pop();
+		}
+
+		return toReturn;
+	}
+
+	int EventHandler::getNextRequestedAction(){
+		int toReturn = -1;
+
+		// Consuming the event
+		if (!requestedActionQueue->empty()){
+			toReturn = requestedActionQueue->front();
+			requestedActionQueue->pop();
 		}
 
 		return toReturn;

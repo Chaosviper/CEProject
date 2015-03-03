@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "EventInterpreter.h"
 #include <time.h>
+#include "GameplayEnum.h"
 
 typedef void(*Callable)();
 
@@ -31,19 +32,12 @@ private:
 
 	EventInterpreter eventInterpreter;
 	
-	enum Phases{
-		startturn = 0,
-		regroup,
-		destiny,
-		launch,
-		alliance,
-		planning,
-		reveal,
-		resolution
-	};
 
-	Phases phase;
+	GameplayEnum::Phases phase;
 	Player* actual;
+	Player* enemy;
+	std::list<Player*> attackAllies;
+	std::list<Player*> defenseAllies;
 
 	bool waiting;// setted by phase function
 	clock_t lastTime; // setted by phase function
@@ -61,9 +55,13 @@ private:
 	bool Resolution();
 
 	Callable ProcessEvent(const EventInfo& info);
+	bool IsInterruptEvent(const EventInfo& toProcess);
+	bool IsZapperEvent(const EventInfo& toProcess);
+
+	GameplayEnum::PlayerRole getPlayerRole(const Player& player);
 
 	// Costruttore, ctor e opertore assegnamento private, cosi' da isolare il singleton
-	GameManager(): actualTempPhase(nullptr), phase(startturn), waiting(false), hasBeenZapped(false) { }
+	GameManager() : actualTempPhase(nullptr), phase(GameplayEnum::startturn), waiting(false), hasBeenZapped(false) { }
 	GameManager(const GameManager&);
 	GameManager& operator=(const GameManager&);
 
