@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "Alien.h"
 #include "Card.h"
+#include <assert.h>
 
 void GameManager::AddPlayer(const Player& newPlayer){
 	players[NumOfPlayer++] = newPlayer;
@@ -30,12 +31,14 @@ void GameManager::GameLoop(){
 		if (actualEv != nullptr){
 			// ** .. Allora se l'evento e' una carta funzione (vedi riga sopra) e non ci sono eventi attivi settalo come evento attuale processandolo..
 			if (actualTempPhase == nullptr && IsInterruptEvent(*actualEv)){
+
 				actualTempPhase = ProcessEvent(*actualEv);
 				// TODO: segno potere/carta come: attivato
 				lastTime = clock(); // <-- Azzero il timer
 			}
 			// ** .. Altrimenti, se l'evento e' gia' presente, l'unica cosa che sto aspettando e' un possibile zap, se arriva (ed e' quello giusto) annullo l'azione segnata
-			else if (actualTempPhase != nullptr && IsZapperEvent(*actualEv)){ // TODO: controllare che lo zap sia quello di tipo corretto
+			else if (actualTempPhase != nullptr && IsZapperEvent(*actualEv) && IsCorrectZapperType(*actualEv)){
+				
 				hasBeenZapped = !hasBeenZapped;
 				// TODO: Segno la carta come giocata
 				lastTime = clock(); // <-- Azzero il timer
@@ -110,6 +113,7 @@ void GameManager::GameLoop(){
 			//TODO: reset di tutti i parametri degli interrupt
 			waiting = false;
 			actualTempPhase = nullptr;
+			typeOfCall = CallableType::None;
 			hasBeenZapped = false;
 		}
 	}
@@ -163,8 +167,27 @@ bool GameManager::Resolution(){
 
 
 Callable GameManager::ProcessEvent(const EventInfo& info){
-	// TODO: implementare il process event! (CHIAMERA' LA FUNZIONE E, PROBABILMENTE, LA RESTITUIRA')
-	return nullptr;
+	Callable toReturn = nullptr;
+
+	if (info.alienPowerPlayed != nullptr){
+		typeOfCall = CallableType::AlienPower;
+		toReturn = info.alienPowerPlayed->getPower();
+	}
+	else{
+		if (info.cardPlayed->getCardType() == CardType::Artifact){
+			typeOfCall = CallableType::Artifact;
+			toReturn = info.cardPlayed->getCardFunction();
+		}
+		else if (info.cardPlayed->getCardType() == CardType::Flare){
+			typeOfCall = CallableType::Flare;
+			toReturn = info.cardPlayed->getCardFunction();
+		}
+		else{
+			assert(typeOfCall != CallableType::None);
+		}
+	}
+
+	return toReturn;
 }
 
 bool GameManager::IsInterruptEvent(const EventInfo& toProcess){
@@ -212,7 +235,7 @@ bool GameManager::IsZapperEvent(const EventInfo& toProcess){
 	if (y != nullptr){
 		allowedPhase = y->getPhases();
 		allowedPlayer = y->getPlayerRole();
-		// TODO: Controllo che sia un'artifact
+		// TODO: Controllo che sia un'artifact (Superfluo forse)
 
 		// If the phase is contained in the phases allowed and also the player type is in the playerRole allowed, so it's a valid interrupt
 		if ((allowedPhase & phase) != 0 && (getPlayerRole(toProcess.playerWhoPlayed) & allowedPlayer) != 0 ){
@@ -225,6 +248,16 @@ bool GameManager::IsZapperEvent(const EventInfo& toProcess){
 	return false;
 }
 
+bool GameManager::IsCorrectZapperType(const EventInfo& toCheck){
+	// Check if has been played a power and the card played for zap is a cosmicZap
+	if (toCheck.cardPlayed->getIfZapper() == ZapType::CosmicZap && typeOfCall == CallableType::AlienPower)
+		return true;
+	// Otherwise, check if has been played an artifact or flare card and the card played for zap is a cardZap
+	else if (toCheck.cardPlayed->getIfZapper() == ZapType::CardZap && (typeOfCall == CallableType::Artifact || typeOfCall == CallableType::Flare))
+		return true;
+	// Otherwise the zapper isn't corrected
+	return false;
+}
 
 GameplayEnum::PlayerRole GameManager::getPlayerRole(const Player& player){
 	

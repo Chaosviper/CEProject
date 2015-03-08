@@ -42,7 +42,15 @@ private:
 	bool waiting;// setted by phase function
 	clock_t lastTime; // setted by phase function
 	
+	enum CallableType{
+		Artifact,
+		Flare,
+		AlienPower,
+		None
+	};
+
 	Callable actualTempPhase;
+	CallableType typeOfCall;
 	bool hasBeenZapped;
 
 	bool StartTurn();
@@ -56,7 +64,8 @@ private:
 
 	Callable ProcessEvent(const EventInfo& info);
 	bool IsInterruptEvent(const EventInfo& toProcess);
-	bool IsZapperEvent(const EventInfo& toProcess);
+	bool IsZapperEvent(const EventInfo& toProcess); 
+	bool IsCorrectZapperType(const EventInfo& toCheck);
 
 	GameplayEnum::PlayerRole getPlayerRole(const Player& player);
 

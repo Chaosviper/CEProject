@@ -35,12 +35,19 @@ class Card
 	CardFunc activateCard;
 
 public:
-	Card();
+	// Encounter Card
+	Card(int val);
+	// Flare & Artifact
+	Card(GameplayEnum::Phases phase, GameplayEnum::PlayerRole prole, ZapType zapTy, CardType ty, CardFunc func);
+	// Generic Card Costructor (es: Reinforcement)
+	Card(GameplayEnum::Phases phase, GameplayEnum::PlayerRole prole,
+		int val, ZapType zapTy, CardType ty, CardFunc func);
 
 	GameplayEnum::Phases getPhases() const;
 	GameplayEnum::PlayerRole getPlayerRole() const;
 	CardFunc getCardFunction() const;
 	ZapType getIfZapper() const;
+	CardType getCardType() const;
 
 	~Card();
 };
