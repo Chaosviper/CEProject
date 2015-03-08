@@ -35,12 +35,13 @@ namespace GameplayEnum{
 
 	// BITMASK!
 	enum PlayerRole{
-		Attack = 1, // 0001
-		Defense = 2, // 0010
-		MainPlayer = 3, // 0011
-		AttackAlly = 4, // 0100
-		DefenseAlly = 8, // 1000
-		Ally = 12, // 1100
-		AnyPlayer = 15 // 1111
+		Attack = 1, // 00001
+		Defense = 2, // 00010
+		MainPlayer = 3, // 00011
+		AttackAlly = 4, // 00100
+		DefenseAlly = 8, // 01000
+		Ally = 12, // 01100
+		None = 16, // 10000 (in logic &, it's true only if confronted with "AnyPlayer")
+		AnyPlayer = 31 // 11111
 	};
 }

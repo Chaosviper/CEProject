@@ -17,9 +17,11 @@ int main(){
 
 	GameManager& gm = GameManager::GetGameManager();
 
-	Player a, b;
-	gm.AddPlayer(a);
-	gm.AddPlayer(b);
+	Alien alien1("alien1", "", AlienDifficulty::Easy, GameplayEnum::Base, 
+				GameplayEnum::Phases::planning, GameplayEnum::PlayerRole::MainPlayer, nullptr);
+	Player a("Player1", GameplayEnum::Color::Black, alien1), b("Player2", GameplayEnum::Color::Red, alien1);
+	gm.AddPlayer(&a);
+	gm.AddPlayer(&b);
 	
 	while (1)
 	gm.GameLoop();

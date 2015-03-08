@@ -13,7 +13,7 @@ struct EventInfo{
 	const Card* cardPlayed;
 	const Alien* alienPowerPlayed;
 
-	EventInfo(Player& whoPlayed): playerWhoPlayed(whoPlayed) { }
+	EventInfo(Player& whoPlayed): playerWhoPlayed(whoPlayed), cardPlayed(nullptr), alienPowerPlayed(nullptr) { }
 	// --> No Distructor because is only a containter, doesn't have the ownership of the resources <--
 };
 

@@ -3,11 +3,11 @@
 #include "Card.h"
 #include <assert.h>
 
-void GameManager::AddPlayer(const Player& newPlayer){
+void GameManager::AddPlayer(Player* newPlayer){
 	players[NumOfPlayer++] = newPlayer;
 }
 
-Player& GameManager::GetPlayer(int index){
+Player* GameManager::GetPlayer(int index){
 
 	if (index >= NumOfPlayer)
 		return players[NumOfPlayer - 1];
@@ -286,8 +286,8 @@ GameplayEnum::PlayerRole GameManager::getPlayerRole(const Player& player){
 			return DefenseAlly;
 	}
 
-	// Else return that is an any player.
-	return AnyPlayer;
+	// Else return that is a any possible player.
+	return PlayerRole::None;
 }
 
 GameManager::~GameManager()

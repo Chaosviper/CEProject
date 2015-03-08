@@ -13,7 +13,7 @@ class Planet
 	bool countAsHome; // bool for fast check if the planet count as home or is loss
 
 public:
-	Planet();
+	Planet(Player* playerOwner);
 	~Planet();
 };
 

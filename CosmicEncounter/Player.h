@@ -24,7 +24,7 @@ class Player
 	Alien alienPower;
 
 public:
-	Player();
+	Player(std::string playerName, GameplayEnum::Color col, const Alien& aliens);
 
 	const Alien& GetAlien() const;
 	const Card* GetCardPlayed(int index) const;

@@ -19,8 +19,8 @@ public:
 		return singleton;
 	}
 
-	void AddPlayer(const Player& newPlayer);
-	Player& GetPlayer(int index);
+	void AddPlayer(Player* newPlayer);
+	Player* GetPlayer(int index);
 
 	void GameLoop();
 
@@ -28,7 +28,7 @@ public:
 
 private:
 	int NumOfPlayer;
-	Player players[MAX_NUM_PLAYERS];
+	Player* players[MAX_NUM_PLAYERS];
 
 	EventInterpreter eventInterpreter;
 	

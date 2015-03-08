@@ -1,9 +1,9 @@
 #include "Planet.h"
 
 
-Planet::Planet()
-{
-}
+Planet::Planet(Player* playerOwner):
+	owner(playerOwner),
+	countAsHome(true) { }
 
 
 Planet::~Planet()

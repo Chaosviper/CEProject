@@ -9,7 +9,7 @@ class Ship
 	Player* owner;
 
 public:
-	Ship();
+	inline Ship(Player* playerOwner) : owner(playerOwner) { }
 	~Ship();
 };
 
