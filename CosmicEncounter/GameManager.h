@@ -4,6 +4,8 @@
 #include "EventInterpreter.h"
 #include <time.h>
 #include "GameplayEnum.h"
+#include "Deck.h"
+#include "DestinyDeck.h"
 
 typedef void(*Callable)();
 
@@ -29,6 +31,9 @@ public:
 private:
 	int NumOfPlayer;
 	Player* players[MAX_NUM_PLAYERS];
+
+	Deck deck;
+	DestinyDeck destinyDeck;
 
 	EventInterpreter eventInterpreter;
 	
