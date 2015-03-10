@@ -8,7 +8,8 @@ Alien::Alien(std::string alienName, std::string alienDesc, AlienDifficulty diff,
 				playerRoleAllowed(role),
 				difficulty(diff),
 				originSet(set),
-				activatePower(powerFunc) { }
+				activatePower(powerFunc),
+				isPowerAlreadyActivated(false) { }
 
 GameplayEnum::Phases Alien::getPhases() const{
 	return phaseAllowed;
@@ -20,6 +21,10 @@ GameplayEnum::PlayerRole Alien::getPlayerRole() const{
 
 AlienPowerFunc Alien::getPower() const{
 	return activatePower;
+}
+
+void Alien::isPowerActive(bool isActive){
+	isPowerAlreadyActivated = isActive;
 }
 
 Alien::~Alien()

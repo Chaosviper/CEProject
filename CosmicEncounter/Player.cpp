@@ -19,11 +19,12 @@ const Alien& Player::GetAlien() const{
 	return alienPower;
 }
 
-const Card* Player::GetCardPlayed(int index) const{
+const Card* Player::GetCardPlayed(int index){
 	const Card* toReturn = nullptr;
 
 	if (index < hand.size()){
 		toReturn = hand[index];
+		hand.erase(hand.begin() + index);
 	}
 
 	return toReturn;

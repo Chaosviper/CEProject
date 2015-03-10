@@ -27,7 +27,7 @@ public:
 	Player(std::string playerName, GameplayEnum::Color col, const Alien& aliens);
 
 	const Alien& GetAlien() const;
-	const Card* GetCardPlayed(int index) const;
+	const Card* GetCardPlayed(int index);
 	void AddCard(const Card* cardGetted);
 
 	//TODO: implementare cpctr!!

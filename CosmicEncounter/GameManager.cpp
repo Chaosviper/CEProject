@@ -37,15 +37,21 @@ void GameManager::GameLoop(){
 			if (actualTempPhase == nullptr && IsInterruptEvent(*actualEv)){
 
 				actualTempPhase = ProcessEvent(*actualEv);
-				// TODO: segno potere/carta come: attivato
+				// TODO: segno potere/carta come: attivato => segno potere come attivato, metto carta del cimitero (se e' una flare??)
 				lastTime = clock(); // <-- Azzero il timer
 			}
 			// ** .. Altrimenti, se l'evento e' gia' presente, l'unica cosa che sto aspettando e' un possibile zap, se arriva (ed e' quello giusto) annullo l'azione segnata
 			else if (actualTempPhase != nullptr && IsZapperEvent(*actualEv) && IsCorrectZapperType(*actualEv)){
 				
 				hasBeenZapped = !hasBeenZapped;
-				// TODO: Segno la carta come giocata
+				// TODO: Segno la carta come giocata => metto carta nel cimitero
 				lastTime = clock(); // <-- Azzero il timer
+			}
+			// ** .. Altrimenti rimettigli la carta in mano (se e' una carta) che non potrebbe giocarla!!
+			else{
+				if (actualEv->cardPlayed != nullptr){
+					actualEv->playerWhoPlayed.AddCard(actualEv->cardPlayed);
+				}
 			}
 		}
 	}

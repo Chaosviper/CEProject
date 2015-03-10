@@ -28,6 +28,8 @@ class Alien
 	GameplayEnum::GameboxSet originSet;
 	AlienPowerFunc activatePower;
 
+	bool isPowerAlreadyActivated;
+
 public:
 	Alien(std::string alienName, std::string alienDesc, AlienDifficulty diff, 
 			GameplayEnum::GameboxSet set, GameplayEnum::Phases phase, GameplayEnum::PlayerRole role, AlienPowerFunc powerFunc);
@@ -35,6 +37,7 @@ public:
 	GameplayEnum::Phases getPhases() const;
 	GameplayEnum::PlayerRole getPlayerRole() const;
 	AlienPowerFunc getPower() const;
+	void isPowerActive(bool isActive);
 
 	~Alien();
 };
