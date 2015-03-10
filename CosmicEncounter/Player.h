@@ -15,7 +15,7 @@ class Player
 	static const int MAX_NUMBER_OF_SHIP = 20;
 
 	Ship* ships[MAX_NUMBER_OF_SHIP];
-	std::vector<Card*> hand;
+	std::vector<const Card*> hand;
 	std::vector<Planet*> homeColonies;
 	std::vector<Planet*> foreignColonies;
 	std::string name;
@@ -28,6 +28,7 @@ public:
 
 	const Alien& GetAlien() const;
 	const Card* GetCardPlayed(int index) const;
+	void AddCard(const Card* cardGetted);
 
 	//TODO: implementare cpctr!!
 	~Player();

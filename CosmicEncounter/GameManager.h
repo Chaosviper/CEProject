@@ -72,7 +72,9 @@ private:
 	bool IsZapperEvent(const EventInfo& toProcess); 
 	bool IsCorrectZapperType(const EventInfo& toCheck);
 
+	// Funzioni di supporto
 	GameplayEnum::PlayerRole getPlayerRole(const Player& player);
+	void dealNewHand(Player& player);
 
 	// Costruttore, ctor e opertore assegnamento private, cosi' da isolare il singleton
 	GameManager() : actualTempPhase(nullptr), phase(GameplayEnum::startturn), waiting(false), hasBeenZapped(false) { }

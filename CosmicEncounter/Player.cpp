@@ -20,7 +20,7 @@ const Alien& Player::GetAlien() const{
 }
 
 const Card* Player::GetCardPlayed(int index) const{
-	Card* toReturn = nullptr;
+	const Card* toReturn = nullptr;
 
 	if (index < hand.size()){
 		toReturn = hand[index];
@@ -28,6 +28,11 @@ const Card* Player::GetCardPlayed(int index) const{
 
 	return toReturn;
 }
+
+void Player::AddCard(const Card* cardGetted){
+	hand.push_back(cardGetted);
+}
+
 
 Player::~Player()
 {

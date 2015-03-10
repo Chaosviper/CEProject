@@ -4,7 +4,11 @@
 #include <assert.h>
 
 void GameManager::AddPlayer(Player* newPlayer){
-	players[NumOfPlayer++] = newPlayer;
+	if (newPlayer != nullptr){ //TODO: Sostituire con una ref??
+		players[NumOfPlayer++] = newPlayer;
+		// Deal new hand to the registed player
+		dealNewHand(*newPlayer);
+	}
 }
 
 Player* GameManager::GetPlayer(int index){
@@ -289,6 +293,17 @@ GameplayEnum::PlayerRole GameManager::getPlayerRole(const Player& player){
 	// Else return that is a any possible player.
 	return PlayerRole::None;
 }
+
+
+void GameManager::dealNewHand(Player& player){
+	const Card* actual;
+
+	for (int i = 0; i < 8; i++){
+		actual = deck.draw(); // Reshuffle done in the deck class autonomusly
+		player.AddCard(actual);
+	}
+}
+
 
 GameManager::~GameManager()
 {

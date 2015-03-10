@@ -5,7 +5,7 @@
 class Card;
 // ** END
 
-class Deck: DeckContainer<Card*>
+class Deck: public DeckContainer<Card>
 {
 
 public:
