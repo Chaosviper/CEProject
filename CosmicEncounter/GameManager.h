@@ -43,6 +43,7 @@ private:
 	Player* enemy;
 	std::list<Player*> attackAllies;
 	std::list<Player*> defenseAllies;
+	std::list<const Card*> cardPlayedInThisEncounter;
 
 	bool waiting;// setted by phase function
 	clock_t lastTime; // setted by phase function
@@ -57,6 +58,7 @@ private:
 	Callable actualTempPhase;
 	CallableType typeOfCall;
 	bool hasBeenZapped;
+	EventInfo infoOfFlarePlayed;
 
 	bool StartTurn();
 	bool Regroup();
@@ -67,7 +69,7 @@ private:
 	bool Reveal();
 	bool Resolution();
 
-	Callable ProcessEvent(const EventInfo& info);
+	Callable ProcessEvent(EventInfo& info);
 	bool IsInterruptEvent(const EventInfo& toProcess);
 	bool IsZapperEvent(const EventInfo& toProcess); 
 	bool IsCorrectZapperType(const EventInfo& toCheck);

@@ -15,7 +15,7 @@ Player::Player(std::string playerName, GameplayEnum::Color col, const Alien& ali
 }
 
 
-const Alien& Player::GetAlien() const{
+Alien& Player::GetAlien(){
 	return alienPower;
 }
 

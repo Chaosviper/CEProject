@@ -9,11 +9,14 @@ class Card;
 // ** END
 
 struct EventInfo{
-	Player& playerWhoPlayed;
+	Player* playerWhoPlayed;
 	const Card* cardPlayed;
-	const Alien* alienPowerPlayed;
+	Alien* alienPowerPlayed;
 
-	EventInfo(Player& whoPlayed): playerWhoPlayed(whoPlayed), cardPlayed(nullptr), alienPowerPlayed(nullptr) { }
+	EventInfo(): playerWhoPlayed(nullptr), cardPlayed(nullptr), alienPowerPlayed(nullptr) { }
+	void flush() { playerWhoPlayed = nullptr; cardPlayed = nullptr; alienPowerPlayed = nullptr; }
+	EventInfo(Player* whoPlayed): playerWhoPlayed(whoPlayed), cardPlayed(nullptr), alienPowerPlayed(nullptr) { }
+	~EventInfo() { }
 	// --> No Distructor because is only a containter, doesn't have the ownership of the resources <--
 };
 
@@ -24,7 +27,7 @@ class EventInterpreter
 public:
 	EventInterpreter();
 
-	EventInfo* GetNextEvent();
+	EventInfo GetNextEvent();
 
 	~EventInterpreter();
 };

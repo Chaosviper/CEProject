@@ -9,9 +9,10 @@ EventInterpreter::EventInterpreter()
 	eventHandlerThread = std::thread(eventHandler);
 }
 
-EventInfo* EventInterpreter::GetNextEvent(){
+// NOTA: lo faccio con la copia dell'oggetto perche' altrimenti dovrei allocarlo qui e deallocarlo fuori.. Bad pratice
+EventInfo EventInterpreter::GetNextEvent(){
 
-	EventInfo* toReturn = nullptr;
+	EventInfo toReturn;
 
 	__int16 nextEvent = eventHandler.getNextEvent();
 
@@ -27,12 +28,12 @@ EventInfo* EventInterpreter::GetNextEvent(){
 
 		Player* whoPlayed = GM.GetPlayer(player);
 
-		toReturn = new EventInfo(*whoPlayed);
+		toReturn.playerWhoPlayed = whoPlayed;
 		if (activatedAlienPower > 0){
-			toReturn->alienPowerPlayed = &(whoPlayed->GetAlien());
+			toReturn.alienPowerPlayed = &(whoPlayed->GetAlien());
 		}
 		else{
-			toReturn->cardPlayed = whoPlayed->GetCardPlayed(cardPlayed);
+			toReturn.cardPlayed = whoPlayed->GetCardPlayed(cardPlayed);
 		}
 	}
 

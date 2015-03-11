@@ -27,30 +27,32 @@ void GameManager::GameLoop(){
 
 	// ** Se mi e' stato detto di aspettare e non sono passati 30 sec: controllo eventi
 	if (waiting && (clock() - lastTime) / CLOCKS_PER_SEC < 30){
-		EventInfo* actualEv = eventInterpreter.GetNextEvent();
+		EventInfo actualEv = eventInterpreter.GetNextEvent();
 
 		std::cout << "\r" << std::flush << (clock() - lastTime) / CLOCKS_PER_SEC ; // TODO: da rimuovere!! e' di debug!!
 
 		// ** Se si e' verificato un evento..
-		if (actualEv != nullptr){
+		if (actualEv.playerWhoPlayed != nullptr){
 			// ** .. Allora se l'evento e' una carta funzione (vedi riga sopra) e non ci sono eventi attivi settalo come evento attuale processandolo..
-			if (actualTempPhase == nullptr && IsInterruptEvent(*actualEv)){
+			if (actualTempPhase == nullptr && IsInterruptEvent(actualEv)){
+				// In process event the card played are put in the played list and the power is set as active
+				actualTempPhase = ProcessEvent(actualEv);
 
-				actualTempPhase = ProcessEvent(*actualEv);
-				// TODO: segno potere/carta come: attivato => segno potere come attivato, metto carta del cimitero (se e' una flare??)
 				lastTime = clock(); // <-- Azzero il timer
 			}
 			// ** .. Altrimenti, se l'evento e' gia' presente, l'unica cosa che sto aspettando e' un possibile zap, se arriva (ed e' quello giusto) annullo l'azione segnata
-			else if (actualTempPhase != nullptr && IsZapperEvent(*actualEv) && IsCorrectZapperType(*actualEv)){
+			else if (actualTempPhase != nullptr && IsZapperEvent(actualEv) && IsCorrectZapperType(actualEv)){
 				
 				hasBeenZapped = !hasBeenZapped;
-				// TODO: Segno la carta come giocata => metto carta nel cimitero
+				// Put the card played in the played list
+				cardPlayedInThisEncounter.push_back(actualEv.cardPlayed);
+
 				lastTime = clock(); // <-- Azzero il timer
 			}
 			// ** .. Altrimenti rimettigli la carta in mano (se e' una carta) che non potrebbe giocarla!!
 			else{
-				if (actualEv->cardPlayed != nullptr){
-					actualEv->playerWhoPlayed.AddCard(actualEv->cardPlayed);
+				if (actualEv.cardPlayed != nullptr){
+					actualEv.playerWhoPlayed->AddCard(actualEv.cardPlayed);
 				}
 			}
 		}
@@ -116,8 +118,18 @@ void GameManager::GameLoop(){
 
 		}
 		else{
+			// se non e' stato zappato..
 			if (!hasBeenZapped){
+				// ..allora se e' una flare rimettila in mano al proprietario..
+				if (infoOfFlarePlayed.cardPlayed != nullptr){
+					infoOfFlarePlayed.playerWhoPlayed->AddCard(infoOfFlarePlayed.cardPlayed);
+				}
+				// ..e poi gioca la funzione detta dalla flare/artifact/alienPower
 				actualTempPhase();
+			}
+			// .. altrimenti se e' stato zappato e c'e' levento popolato (ovvero e' stata giocata una flare), scarta la flare
+			else if (infoOfFlarePlayed.cardPlayed != nullptr){
+				cardPlayedInThisEncounter.push_back(infoOfFlarePlayed.cardPlayed);
 			}
 
 			//TODO: reset di tutti i parametri degli interrupt
@@ -125,6 +137,7 @@ void GameManager::GameLoop(){
 			actualTempPhase = nullptr;
 			typeOfCall = CallableType::None;
 			hasBeenZapped = false;
+			infoOfFlarePlayed.flush();
 		}
 	}
 }
@@ -172,24 +185,34 @@ bool GameManager::Reveal(){
 bool GameManager::Resolution(){
 	waiting = true;
 	lastTime = clock();
+	//TODO: Spostare le carte nella lista "cardPlayedInThisEncounter" nel cimitero.
 	return true;
 }
 
 
-Callable GameManager::ProcessEvent(const EventInfo& info){
+Callable GameManager::ProcessEvent(EventInfo& info){
 	Callable toReturn = nullptr;
 
 	if (info.alienPowerPlayed != nullptr){
 		typeOfCall = CallableType::AlienPower;
+		//  SetAlienPower as Active
+		info.alienPowerPlayed->isPowerActive(true);
+		// return power function
 		toReturn = info.alienPowerPlayed->getPower();
 	}
 	else{
 		if (info.cardPlayed->getCardType() == CardType::Artifact){
 			typeOfCall = CallableType::Artifact;
+			// put card in the list of card played in this turn
+			cardPlayedInThisEncounter.push_back(info.cardPlayed);
+			// return artifact card function
 			toReturn = info.cardPlayed->getCardFunction();
 		}
 		else if (info.cardPlayed->getCardType() == CardType::Flare){
 			typeOfCall = CallableType::Flare;
+			// Set as infoPlayedArtifact (because, if later will be zapped, the card must return to the player's hand)
+			infoOfFlarePlayed = info;
+			// return flare card function
 			toReturn = info.cardPlayed->getCardFunction();
 		}
 		else{
@@ -212,7 +235,7 @@ bool GameManager::IsInterruptEvent(const EventInfo& toProcess){
 		allowedPlayer = x->getPlayerRole();
 
 		// If the phase is contained in the phases allowed and also the player type is in the playerRole allowed, so it's a valid interrupt
-		if ((allowedPhase & phase) != 0 && (getPlayerRole(toProcess.playerWhoPlayed) & allowedPlayer) != 0){
+		if ((allowedPhase & phase) != 0 && (getPlayerRole(*(toProcess.playerWhoPlayed)) & allowedPlayer) != 0){
 			return true;
 		}
 	}
@@ -223,10 +246,10 @@ bool GameManager::IsInterruptEvent(const EventInfo& toProcess){
 	if (y != nullptr){
 		allowedPhase = y->getPhases();
 		allowedPlayer = y->getPlayerRole();
-		// TODO: Controllo che sia un'artifact o una flare
+		// TODO:? Controllo che sia un'artifact o una flare
 
 		// If the phase is contained in the phases allowed and also the player type is in the playerRole allowed, so it's a valid interrupt
-		if ((allowedPhase & phase) != 0 && (getPlayerRole(toProcess.playerWhoPlayed) & allowedPlayer) != 0){
+		if ((allowedPhase & phase) != 0 && (getPlayerRole(*(toProcess.playerWhoPlayed)) & allowedPlayer) != 0){
 			if (y->getIfZapper() == ZapType::None){
 				return true;
 			}
@@ -237,7 +260,7 @@ bool GameManager::IsInterruptEvent(const EventInfo& toProcess){
 }
 
 bool GameManager::IsZapperEvent(const EventInfo& toProcess){
-	// TODO: per ora l'alieno non necesita di avere il check dello zapper!
+	// TODO:? per ora l'alieno non necesita di avere il check dello zapper!
 	const Card* y = toProcess.cardPlayed;
 	GameplayEnum::Phases allowedPhase;
 	GameplayEnum::PlayerRole allowedPlayer;
@@ -245,10 +268,10 @@ bool GameManager::IsZapperEvent(const EventInfo& toProcess){
 	if (y != nullptr){
 		allowedPhase = y->getPhases();
 		allowedPlayer = y->getPlayerRole();
-		// TODO: Controllo che sia un'artifact (Superfluo forse)
+		// TODO:? Controllo che sia un'artifact (Superfluo forse)
 
 		// If the phase is contained in the phases allowed and also the player type is in the playerRole allowed, so it's a valid interrupt
-		if ((allowedPhase & phase) != 0 && (getPlayerRole(toProcess.playerWhoPlayed) & allowedPlayer) != 0 ){
+		if ((allowedPhase & phase) != 0 && (getPlayerRole(*(toProcess.playerWhoPlayed)) & allowedPlayer) != 0 ){
 			if (y->getIfZapper() != ZapType::None){
 				return true;
 			}
