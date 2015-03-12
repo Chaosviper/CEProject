@@ -22,7 +22,7 @@ class Alien
 {
 	GameplayEnum::Phases phaseAllowed;
 	GameplayEnum::PlayerRole playerRoleAllowed;
-	std::string description;
+	std::string description; // Power text description
 	std::string name;
 	AlienDifficulty difficulty;
 	GameplayEnum::GameboxSet originSet;

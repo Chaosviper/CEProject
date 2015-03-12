@@ -19,6 +19,18 @@
     <Filter Include="Header Files\Entities">
       <UniqueIdentifier>{cdacdb7f-bd4f-4011-9e6c-86e9e2886a22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ViewEntities">
+      <UniqueIdentifier>{b094660d-4cf4-4dae-9d97-11ebea3fc50b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\InputHandler">
+      <UniqueIdentifier>{d6f4ec30-993b-4f19-a2df-e554dd5b2779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\InputHandler">
+      <UniqueIdentifier>{a7bf4c9e-e39c-4b39-8ddd-606dbbcbaf5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ViewEntities">
+      <UniqueIdentifier>{c5a86896-7005-4769-b6a1-2a44cc28a715}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Alien.h">
@@ -57,14 +69,23 @@
     <ClInclude Include="Warp.h">
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="EventHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EventInterpreter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventHandler.h">
+      <Filter>Header Files\InputHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="EventInterpreter.h">
+      <Filter>Header Files\InputHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewMiddleLayer.h">
+      <Filter>Header Files\ViewEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="InfoForView.h">
+      <Filter>Header Files\ViewEntities</Filter>
+    </ClInclude>
+    <ClInclude Include="ConsoleView.h">
+      <Filter>Header Files\ViewEntities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -98,17 +119,20 @@
     <ClCompile Include="Warp.cpp">
       <Filter>Source Files\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="EventHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DummyMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EventInterpreter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventHandler.cpp">
+      <Filter>Source Files\InputHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="EventInterpreter.cpp">
+      <Filter>Source Files\InputHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleView.cpp">
+      <Filter>Source Files\ViewEntities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

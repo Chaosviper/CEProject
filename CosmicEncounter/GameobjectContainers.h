@@ -63,7 +63,7 @@ public:
 		return x;
 	}
 
-	void shuffleDeck() { std::random_shuffle(deck.begin(), deck.end()); }
+	void shuffleDeck() { std::random_shuffle(deck.begin(), deck.end()); } // TODO: IMPLEMENTING A REAL SEED!!! IT ISN'T RANDOM AT ALL!!
 
 	virtual ~DeckContainer() { }
 };

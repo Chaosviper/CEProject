@@ -6,6 +6,10 @@
 #include "GameplayEnum.h"
 #include "Deck.h"
 #include "DestinyDeck.h"
+// Include for view
+#include "ViewMiddleLayer.h"
+#include "ConsoleView.h"
+// End
 
 typedef void(*Callable)();
 
@@ -35,8 +39,10 @@ private:
 	Deck deck;
 	DestinyDeck destinyDeck;
 
+	// Event Input Handler
 	EventInterpreter eventInterpreter;
-	
+	// View Manager
+	ViewMiddleLayer<ConsoleView> viewManager;
 
 	GameplayEnum::Phases phase;
 	Player* actual;
