@@ -1,5 +1,6 @@
 #pragma once
 #include <queue>
+#include <mutex>
 
 namespace UIHandler{
 
@@ -31,15 +32,18 @@ namespace UIHandler{
 		std::queue<int>* requestedActionQueue;
 		RefCounter* rc;
 
+		std::mutex mux;
+
 		bool InterpretInput(char actualInputDetected);
 	public:
 		// callable function when creating a thread
 		void operator()();
 
 		// Get the event, if any, and consume it
-		__int16 getNextEvent(); // TODO: Dovra' essere thread safe!!
-		bool EventHandler::hasNextEvent() const; // TODO: Dovra' essere thread safe!!
+		__int16 getNextEvent();
+		bool EventHandler::hasNextEvent();
 		int getNextRequestedAction();
+		bool EventHandler::hasNextAction();
 
 		EventHandler();
 		EventHandler(const EventHandler& toCopy);

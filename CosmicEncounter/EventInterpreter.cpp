@@ -9,7 +9,7 @@ EventInterpreter::EventInterpreter()
 	eventHandlerThread = std::thread(eventHandler);
 }
 
-bool EventInterpreter::HasNextEvent() const{
+bool EventInterpreter::HasNextEvent(){
 	return eventHandler.hasNextEvent();
 }
 

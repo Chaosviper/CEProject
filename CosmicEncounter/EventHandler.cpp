@@ -100,7 +100,9 @@ namespace UIHandler{
 						inputBitMaskResult = 1 << 15; // bit of alien power activated
 						inputBitMaskResult = inputBitMaskResult | (playerWhoPlayed << 12); // bits of player who played
 
+						mux.lock(); // Lock
 						eventsQueue->push(inputBitMaskResult);
+						mux.unlock(); // Unlock
 
 						toReturn = true;
 					}
@@ -135,7 +137,9 @@ namespace UIHandler{
 							inputBitMaskResult = playerWhoPlayed << 12; // bits of player who played
 							inputBitMaskResult = inputBitMaskResult | cardPlayed;
 
+							mux.lock(); // Lock
 							eventsQueue->push(inputBitMaskResult);
+							mux.unlock(); // Unlock
 
 							toReturn = true;
 						}
@@ -172,26 +176,44 @@ namespace UIHandler{
 
 			int actionSelected = std::stoi(tempNum);
 
+			mux.lock(); // Lock
 			requestedActionQueue->push(actionSelected);
+			mux.unlock(); // Unlock
 		}
 
 		return toReturn;
 	}
 
-	bool EventHandler::hasNextEvent() const{
+	bool EventHandler::hasNextEvent(){
 		bool toReturn = true;
+
+		mux.lock(); // Lock
 		toReturn = !eventsQueue->empty();
+		mux.unlock(); // Unlock
+
 		return toReturn;
 	}
 
 	__int16 EventHandler::getNextEvent(){
 		__int16 toReturn = 0;
 
+		mux.lock(); // Lock
 		// Consuming the event
 		if (!eventsQueue->empty()){
 			toReturn = eventsQueue->front();
 			eventsQueue->pop();
 		}
+		mux.unlock(); // Unlock
+
+		return toReturn;
+	}
+
+	bool EventHandler::hasNextAction(){
+		bool toReturn = true;
+
+		mux.lock(); // Lock
+		toReturn = !requestedActionQueue->empty();
+		mux.unlock(); // Unlock
 
 		return toReturn;
 	}
@@ -199,11 +221,13 @@ namespace UIHandler{
 	int EventHandler::getNextRequestedAction(){
 		int toReturn = -1;
 
+		mux.lock(); // Lock
 		// Consuming the event
 		if (!requestedActionQueue->empty()){
 			toReturn = requestedActionQueue->front();
 			requestedActionQueue->pop();
 		}
+		mux.unlock(); // Unlock
 
 		return toReturn;
 	}
