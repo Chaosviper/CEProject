@@ -9,6 +9,10 @@ EventInterpreter::EventInterpreter()
 	eventHandlerThread = std::thread(eventHandler);
 }
 
+bool EventInterpreter::HasNextEvent() const{
+	return eventHandler.hasNextEvent();
+}
+
 // NOTA: lo faccio con la copia dell'oggetto perche' altrimenti dovrei allocarlo qui e deallocarlo fuori.. Bad pratice
 EventInfo EventInterpreter::GetNextEvent(){
 

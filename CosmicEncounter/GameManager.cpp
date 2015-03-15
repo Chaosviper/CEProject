@@ -27,12 +27,15 @@ void GameManager::GameLoop(){
 
 	// ** Se mi e' stato detto di aspettare e non sono passati 30 sec: controllo eventi
 	if (waiting && (clock() - lastTime) / CLOCKS_PER_SEC < 30){
-		EventInfo actualEv = eventInterpreter.GetNextEvent();
 
 		std::cout << "\r" << std::flush << (clock() - lastTime) / CLOCKS_PER_SEC ; // TODO: da rimuovere!! e' di debug!!
 
 		// ** Se si e' verificato un evento..
-		if (actualEv.playerWhoPlayed != nullptr){
+		if (eventInterpreter.HasNextEvent()){
+			// ** recuperalo e, se e' valido ..
+			EventInfo actualEv = eventInterpreter.GetNextEvent();
+			assert(actualEv.playerWhoPlayed != nullptr);
+
 			// ** .. Allora se l'evento e' una carta funzione (vedi riga sopra) e non ci sono eventi attivi settalo come evento attuale processandolo..
 			if (actualTempPhase == nullptr && IsInterruptEvent(actualEv)){
 				// In process event the card played are put in the played list and the power is set as active
@@ -56,6 +59,7 @@ void GameManager::GameLoop(){
 				}
 			}
 		}
+		
 	}
 	else{
 		if (actualTempPhase == nullptr){

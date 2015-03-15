@@ -178,6 +178,12 @@ namespace UIHandler{
 		return toReturn;
 	}
 
+	bool EventHandler::hasNextEvent() const{
+		bool toReturn = true;
+		toReturn = !eventsQueue->empty();
+		return toReturn;
+	}
+
 	__int16 EventHandler::getNextEvent(){
 		__int16 toReturn = 0;
 

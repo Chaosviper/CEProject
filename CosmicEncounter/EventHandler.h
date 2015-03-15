@@ -38,6 +38,7 @@ namespace UIHandler{
 
 		// Get the event, if any, and consume it
 		__int16 getNextEvent(); // TODO: Dovra' essere thread safe!!
+		bool EventHandler::hasNextEvent() const; // TODO: Dovra' essere thread safe!!
 		int getNextRequestedAction();
 
 		EventHandler();

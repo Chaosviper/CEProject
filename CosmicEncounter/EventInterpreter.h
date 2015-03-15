@@ -27,6 +27,7 @@ class EventInterpreter
 public:
 	EventInterpreter();
 
+	bool HasNextEvent() const;
 	EventInfo GetNextEvent();
 
 	~EventInterpreter();
