@@ -6,6 +6,8 @@
 #include "GameplayEnum.h"
 #include "Deck.h"
 #include "DestinyDeck.h"
+#include "HyperspaceGate.h"
+#include "Warp.h"
 // Include for view
 #include "ViewMiddleLayer.h"
 #include "ConsoleView.h"
@@ -28,6 +30,7 @@ public:
 	void AddPlayer(Player* newPlayer);
 	Player* GetPlayer(int index);
 
+	void InitGame(); // <-- TO CALL AFTER THE ADDITION OF ALL PLAYER!
 	void GameLoop();
 
 	~GameManager();
@@ -38,6 +41,8 @@ private:
 
 	Deck deck;
 	DestinyDeck destinyDeck;
+	HyperspaceGate hyperspaceGate;
+	Warp warp;
 
 	// Event Input Handler
 	EventInterpreter eventInterpreter;
@@ -85,7 +90,7 @@ private:
 	void dealNewHand(Player& player);
 
 	// Costruttore, ctor e opertore assegnamento private, cosi' da isolare il singleton
-	GameManager() : actualTempPhase(nullptr), phase(GameplayEnum::startturn), waiting(false), hasBeenZapped(false) { }
+	GameManager();
 	GameManager(const GameManager&);
 	GameManager& operator=(const GameManager&);
 

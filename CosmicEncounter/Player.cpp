@@ -19,6 +19,26 @@ Alien& Player::GetAlien(){
 	return alienPower;
 }
 
+const std::vector<Planet*>& Player::GetHomeColonies() const{
+	return homeColonies;
+}
+
+const std::vector<Planet*>& Player::GetForeignColonies() const{
+	return foreignColonies;
+}
+
+const std::string& Player::GetName() const{
+	return name;
+}
+
+const GameplayEnum::Color& Player::GetColor() const{
+	return color;
+}
+
+const std::vector<const Card*>& Player::GetHand() const{
+	return hand;
+}
+
 const Card* Player::GetCardPlayed(int index){
 	const Card* toReturn = nullptr;
 

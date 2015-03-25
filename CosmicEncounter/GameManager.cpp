@@ -1,7 +1,53 @@
 #include "GameManager.h"
 #include "Alien.h"
 #include "Card.h"
+#include "InfoForView.h"
 #include <assert.h>
+
+GameManager::GameManager() : 
+	actualTempPhase(nullptr), 
+	phase(GameplayEnum::startturn), 
+	waiting(false), 
+	hasBeenZapped(false) { 
+
+}
+
+void GameManager::InitGame(){
+
+	// Fill the InfoForView with costant pointer to GM Information stuff for later use in the Graphics interface
+	InfoForView viewInfo;
+	// 1) time
+	viewInfo.raminingTime = &lastTime;
+	// 2) GameManager Info (auto updating)
+	viewInfo.gmInfo.deck = &deck;
+	viewInfo.gmInfo.destinyDeck = &destinyDeck;
+	viewInfo.gmInfo.hyperspaceGate = &hyperspaceGate;
+	viewInfo.gmInfo.warpInfo = &warp;
+	// 2.1) Encounter Info
+	viewInfo.gmInfo.encounterInfo.actual = -1;
+	viewInfo.gmInfo.encounterInfo.enemy = -1;
+	viewInfo.gmInfo.encounterInfo.attackEncounter = nullptr;
+	viewInfo.gmInfo.encounterInfo.cardPlayedInThisEncounter = &cardPlayedInThisEncounter;
+	viewInfo.gmInfo.encounterInfo.defenseEncounter = nullptr;
+	viewInfo.gmInfo.encounterInfo.phase = &phase;
+	// 3) Player Info (auto updating)
+	PlayerInfoForView actual;
+	for (int i = 0; i < NumOfPlayer; ++i){
+		actual.hand = &(players[i]->GetHand());
+		actual.color = &(players[i]->GetColor());
+		actual.foreignColonies = &(players[i]->GetForeignColonies());
+		actual.homeColonies = &(players[i]->GetHomeColonies());
+		actual.name = &(players[i]->GetName());
+
+		// 3.1) Alien Info (auto updating)
+		// TODO:!!! Inserire le ref alle variabili dell'alien, risolvere i problemi dei metodi.
+
+		// NOTA: THE ORDER OF THE PLAYER (in the view list) IS THE SAME OF THE PLAYER IN THE GM
+		viewInfo.playerInfo.push_back(actual);
+	}
+	// 4) Event callback (no update needed)
+	viewInfo.onEndAnimation = nullptr;
+}
 
 void GameManager::AddPlayer(Player* newPlayer){
 	if (newPlayer != nullptr){ //TODO: Sostituire con una ref??

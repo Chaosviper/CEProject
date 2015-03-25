@@ -27,6 +27,12 @@ public:
 	Player(std::string playerName, GameplayEnum::Color col, const Alien& aliens);
 
 	Alien& GetAlien();
+	const std::vector<Planet*>& GetHomeColonies() const;
+	const std::vector<Planet*>& GetForeignColonies() const;
+	const std::string& GetName() const;
+	const std::vector<const Card*>& GetHand() const;
+	const GameplayEnum::Color& GetColor() const;
+
 	const Card* GetCardPlayed(int index);
 	void AddCard(const Card* cardGetted);
 

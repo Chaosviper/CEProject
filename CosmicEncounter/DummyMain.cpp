@@ -23,6 +23,7 @@ int main(){
 	gm.AddPlayer(&a);
 	gm.AddPlayer(&b);
 	
+	gm.InitGame();
 	while (1)
-	gm.GameLoop();
+		gm.GameLoop();
 }

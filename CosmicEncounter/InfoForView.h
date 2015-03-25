@@ -1,4 +1,5 @@
 //#include <iosfwd>
+#pragma once
 #include <vector>
 #include <list>
 #include <time.h>
@@ -34,7 +35,7 @@ struct AlienInfoForView{
 };
 
 struct PlayerInfoForView{
-	const std::vector<const Card>* hand;
+	const std::vector<const Card*>* hand;
 	const std::vector<Planet*>* homeColonies;
 	// Maybe foreign colonies pointer are useless.. Already have all the base Planet for player!
 	const std::vector<Planet*>* foreignColonies;
@@ -48,11 +49,11 @@ struct PlayerInfoForView{
 struct EncounterInfoForView{
 	const GameplayEnum::Phases* phase;
 
-	int actual; // Index of PlayerInfoForView list!
-	int enemy; // Index of PlayerInfoForView list!
+	int actual; // Index of PlayerInfoForView list! OWNERSHIP: SELF
+	int enemy; // Index of PlayerInfoForView list! OWNERSHIP: SELF
 	// NOTA: No info on deck because are sensible information and the view doesn't have knowledge of them
-	std::list<int> attackAllies; // Index of PlayerInfoForView list!
-	std::list<int> defenseAllies; // Index of PlayerInfoForView list!
+	std::list<int> attackAllies; // Index of PlayerInfoForView list! OWNERSHIP: SELF
+	std::list<int> defenseAllies; // Index of PlayerInfoForView list! OWNERSHIP: SELF
 	// NOTA: Info of number of ships isn't important!! The information is aready in the Warp, HyperspaceGate and Planet! :D
 
 	// NOTA: ** Forse da rimuovere! ->
@@ -66,8 +67,8 @@ struct EncounterInfoForView{
 
 struct GMStateInfoForView{
 	const Warp* warpInfo;
-	const Deck* graveyard;
-	const DestinyDeck* destinyGraveyard;
+	const Deck* deck;
+	const DestinyDeck* destinyDeck;
 	const HyperspaceGate* hyperspaceGate;
 
 	EncounterInfoForView encounterInfo;
