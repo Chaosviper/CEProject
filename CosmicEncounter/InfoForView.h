@@ -1,11 +1,16 @@
 //#include <iosfwd>
 #include <vector>
+#include <list>
 #include <time.h>
 
 // ** FORWARD DECLARATIONS
 class Card;
 class Planet;
 class GameManager;
+class Warp;
+class Deck;
+class DestinyDeck;
+class HyperspaceGate;
 
 namespace GameplayEnum{
 	enum Color;
@@ -40,11 +45,39 @@ struct PlayerInfoForView{
 	AlienInfoForView alienInfo; // it's already all constant inside AlienInfoForView!
 };
 
+struct EncounterInfoForView{
+	const GameplayEnum::Phases* phase;
+
+	int actual; // Index of PlayerInfoForView list!
+	int enemy; // Index of PlayerInfoForView list!
+	// NOTA: No info on deck because are sensible information and the view doesn't have knowledge of them
+	std::list<int> attackAllies; // Index of PlayerInfoForView list!
+	std::list<int> defenseAllies; // Index of PlayerInfoForView list!
+	// NOTA: Info of number of ships isn't important!! The information is aready in the Warp, HyperspaceGate and Planet! :D
+
+	// NOTA: ** Forse da rimuovere! ->
+	const Card* attackEncounter;
+	const Card* defenseEncounter;
+	const std::list<const Card*>* otherCardPlayed;
+	// ** <- END
+
+	const std::list<const Card*>* cardPlayedInThisEncounter;
+};
+
+struct GMStateInfoForView{
+	const Warp* warpInfo;
+	const Deck* graveyard;
+	const DestinyDeck* destinyGraveyard;
+	const HyperspaceGate* hyperspaceGate;
+
+	EncounterInfoForView encounterInfo;
+};
+
 struct InfoForView{
 	std::vector<PlayerInfoForView> playerInfo; // 1 for each player
+	GMStateInfoForView gmInfo;
 
-	const clock_t* lastClockSet;
-	//TODO: GameManagerInformationForView (warpStatus, Deck/Graveyard, encounterInfo, CarteGiocateInQuestoEncounter?)
+	const clock_t* raminingTime; // seconds waiting the event (coutdown)
 	
 	CallbackFunctionOnEndAnimation onEndAnimation;
 };

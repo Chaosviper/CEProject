@@ -12,9 +12,9 @@ namespace GameplayEnum{
 
 class Player
 {
-	static const int MAX_NUMBER_OF_SHIP = 20;
+	//static const int MAX_NUMBER_OF_SHIP = 20;
 
-	Ship* ships[MAX_NUMBER_OF_SHIP];
+	Ship* shipsArray;
 	std::vector<const Card*> hand;
 	std::vector<Planet*> homeColonies;
 	std::vector<Planet*> foreignColonies;
