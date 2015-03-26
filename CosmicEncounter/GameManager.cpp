@@ -40,13 +40,19 @@ void GameManager::InitGame(){
 		actual.name = &(players[i]->GetName());
 
 		// 3.1) Alien Info (auto updating)
-		// TODO:!!! Inserire le ref alle variabili dell'alien, risolvere i problemi dei metodi.
+		const Alien& temp = players[i]->GetAlien();
+		actual.alienInfo.description = &(temp.getDescription());
+		actual.alienInfo.isPowerAlreadyActivated = &(temp.isPowerActive_REF());
+		actual.alienInfo.name = &(temp.getName());
+		actual.alienInfo.phaseAllowed = &(temp.getPhases());
+		actual.alienInfo.playerRoleAllowed = &(temp.getPlayerRole());
 
 		// NOTA: THE ORDER OF THE PLAYER (in the view list) IS THE SAME OF THE PLAYER IN THE GM
 		viewInfo.playerInfo.push_back(actual);
 	}
 	// 4) Event callback (no update needed)
-	viewInfo.onEndAnimation = nullptr;
+	viewInfo.onEndAnimation = OnAnimationEnded;
+
 }
 
 void GameManager::AddPlayer(Player* newPlayer){
@@ -246,7 +252,7 @@ Callable GameManager::ProcessEvent(EventInfo& info){
 	if (info.alienPowerPlayed != nullptr){
 		typeOfCall = CallableType::AlienPower;
 		//  SetAlienPower as Active
-		info.alienPowerPlayed->isPowerActive(true);
+		info.alienPowerPlayed->setPowerActive(true);
 		// return power function
 		toReturn = info.alienPowerPlayed->getPower();
 	}
@@ -386,4 +392,15 @@ void GameManager::dealNewHand(Player& player){
 
 GameManager::~GameManager()
 {
+}
+
+
+
+
+
+
+
+int OnAnimationEnded(GameManager& gm){
+	// TODO: implementing resume of the main that was waiting until the Animation's ended!
+	return 0;
 }

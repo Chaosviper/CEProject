@@ -98,3 +98,8 @@ private:
 
 };
 
+// Callback functions
+
+// this function "Mention" GameManager and "Supplied with" GameManager. => OnANimationEnded is "part of" GameManager. 
+//	it's outside GameManager because can be implemented with only the "pubblic interface" of GameManager
+int OnAnimationEnded(GameManager&);

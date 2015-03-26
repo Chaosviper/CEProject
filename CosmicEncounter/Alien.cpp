@@ -11,19 +11,31 @@ Alien::Alien(std::string alienName, std::string alienDesc, AlienDifficulty diff,
 				activatePower(powerFunc),
 				isPowerAlreadyActivated(false) { }
 
-GameplayEnum::Phases Alien::getPhases() const{
+const GameplayEnum::Phases& Alien::getPhases() const{
 	return phaseAllowed;
 }
 
-GameplayEnum::PlayerRole Alien::getPlayerRole() const{
+const GameplayEnum::PlayerRole& Alien::getPlayerRole() const{
 	return playerRoleAllowed;
+}
+
+const bool& Alien::isPowerActive_REF() const{
+	return isPowerAlreadyActivated;
+}
+
+const std::string& Alien::getName() const{
+	return name;
+}
+
+const std::string& Alien::getDescription() const{
+	return description;
 }
 
 AlienPowerFunc Alien::getPower() const{
 	return activatePower;
 }
 
-void Alien::isPowerActive(bool isActive){
+void Alien::setPowerActive(bool isActive){
 	isPowerAlreadyActivated = isActive;
 }
 

@@ -34,10 +34,13 @@ public:
 	Alien(std::string alienName, std::string alienDesc, AlienDifficulty diff, 
 			GameplayEnum::GameboxSet set, GameplayEnum::Phases phase, GameplayEnum::PlayerRole role, AlienPowerFunc powerFunc);
 
-	GameplayEnum::Phases getPhases() const;
-	GameplayEnum::PlayerRole getPlayerRole() const;
+	const GameplayEnum::Phases& getPhases() const;
+	const GameplayEnum::PlayerRole& getPlayerRole() const;
+	const bool& isPowerActive_REF() const;
+	const std::string& getName() const;
+	const std::string& getDescription() const;
 	AlienPowerFunc getPower() const;
-	void isPowerActive(bool isActive);
+	void setPowerActive(bool isActive);
 
 	~Alien();
 };
